@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使用次數統計｜學生學習診斷與教學建議系統</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#ffffff; --ink:#1f2430; --sub:#5b6270; --line:#e3e6ee;
+    --brand:#3457d5; --brand-weak:#eef1fd; --warn:#b3541e; --warn-bg:#fdf1e6;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft JhengHei",sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;}
+  header{background:linear-gradient(135deg,#3457d5,#5b7ff0);color:#fff;padding:28px 24px;}
+  header h1{margin:0 0 6px;font-size:22px;}
+  header p{margin:0;opacity:.92;font-size:14px;}
+  .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 60px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 1px 2px rgba(20,20,40,.03);}
+  .note{font-size:13px;color:var(--sub);margin-top:10px;}
+  .banner{border-radius:10px;padding:12px 14px;font-size:13.5px;margin-top:14px;}
+  .banner.info{background:var(--brand-weak);color:#2a3a8f;}
+  .banner.warn{background:var(--warn-bg);color:var(--warn);}
+  a.btn{display:inline-block;background:var(--brand);color:#fff;border:none;border-radius:8px;padding:10px 18px;font-size:14px;cursor:pointer;font-weight:600;text-decoration:none;}
+  a.back{display:inline-block;margin-top:14px;color:var(--sub);font-size:13px;}
+  .frame-wrap{margin-top:16px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff;}
+  .frame-wrap iframe{width:100%;height:720px;border:0;display:block;}
+  footer{max-width:1080px;margin:0 auto;padding:0 16px 40px;color:var(--sub);font-size:12.5px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>使用次數統計</h1>
+  <p>統計「學生學習診斷與教學建議系統」累計被執行分析的次數，僅供了解系統使用情形參考。</p>
+</header>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>統計說明</h2>
+    <p>每次在診斷系統主頁按下「開始分析」，就會自動累計一次，不區分學校或其他來源，只是單純的總次數。統計不包含任何學生姓名、座號、答題內容等個人資料。</p>
+    <p>本系統為純靜態網頁（部署於 GitHub Pages，沒有自建伺服器），次數統計借助免費的第三方網站流量統計服務 <a href="https://www.goatcounter.com" target="_blank" rel="noopener">GoatCounter</a> 記錄與呈現，下方為其統計後台的連結／內嵌畫面。</p>
+    <div class="banner info">後台首頁上方的「Pageviews」總計數字，就是累計的分析執行次數。</div>
+  </div>
+
+  <div class="card">
+    <h2>統計後台</h2>
+    <p>點擊下方按鈕開啟完整統計後台（在新分頁開啟）：</p>
+    <a class="btn" href="https://sohofly.goatcounter.com" target="_blank" rel="noopener">開啟統計後台 ↗</a>
+    <div class="note">若下方沒有出現內嵌畫面（可能因為尚未設定允許內嵌，或瀏覽器封鎖了第三方內容），請改用上方按鈕開啟。</div>
+    <div class="frame-wrap">
+      <iframe src="https://sohofly.goatcounter.com?hideui=1" loading="lazy" title="使用次數統計後台"></iframe>
+    </div>
+  </div>
+
+  <a class="back" href="index.html">← 回到診斷系統主頁</a>
+
+</div>
+
+<footer>
+  系統說明：本頁僅為統計後台的中文化入口，實際數字由 GoatCounter（第三方免費網站流量統計服務）記錄與計算，本系統不另外保存或處理使用統計資料。若統計後台顯示需要登入，代表尚未於 GoatCounter 後台將「Dashboard viewable by」設定為「Anyone」（公開檢視）。
+</footer>
+
+</body>
+</html>
