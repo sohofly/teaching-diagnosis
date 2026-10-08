@@ -129,6 +129,23 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
   .priority-box.gap-box .priority-note{color:#2a3a8f;opacity:.85;}
   .priority-box.gap-box .priority-item{border-color:#c7d1f5;}
   .priority-item .p-head .muted{margin-left:8px;font-size:12px;}
+
+  /* ---- 近似 KIDMAP ---- */
+  .kidmap{border:1px solid var(--line);border-radius:10px;background:#fff;margin:8px 0 10px;overflow:hidden;}
+  .km-row{display:grid;grid-template-columns:1fr 78px 1fr;align-items:center;border-bottom:1px solid #f0f2f7;min-height:30px;}
+  .km-row:last-child{border-bottom:none;}
+  .km-head{background:#fafbfe;font-size:12px;color:var(--sub);font-weight:600;text-align:center;padding:4px 0;}
+  .km-mid{text-align:center;font-size:12px;color:var(--sub);font-variant-numeric:tabular-nums;}
+  .km-cell{padding:3px 12px;}
+  .km-left{text-align:right;}
+  .km-right{text-align:left;}
+  .km-chip{display:inline-block;font-size:12px;padding:1px 9px;border-radius:999px;font-weight:600;border:1px solid transparent;white-space:nowrap;}
+  .km-rc{background:var(--good-bg);color:var(--good);}
+  .km-mis{background:var(--bad);color:#fff;}
+  .km-ri{background:#eef0f6;color:var(--sub);}
+  .km-adv{background:#fff;color:var(--brand);border-color:var(--brand);}
+  .km-edge{opacity:.65;border-style:dashed;border-color:currentColor;}
+  .km-line{border-top:2px dashed #1f2430;border-bottom:2px dashed #1f2430;background:#fff9e6;text-align:center;font-size:12px;font-weight:700;padding:3px 8px;color:var(--ink);}
 </style>
 </head>
 <body>
@@ -206,11 +223,13 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
       <button class="subtab-btn" data-subtab="optiongap">②常見錯誤選項比較</button>
       <button class="subtab-btn" data-subtab="fulllist">③建議教學完整列表</button>
       <button class="subtab-btn" data-subtab="students">④個別學生診斷</button>
+      <button class="subtab-btn" data-subtab="kidmap">⑤近似 KIDMAP</button>
     </div>
     <div id="subtab-overview" class="subtab-panel"></div>
     <div id="subtab-optiongap" class="subtab-panel hidden"></div>
     <div id="subtab-fulllist" class="subtab-panel hidden"></div>
     <div id="subtab-students" class="subtab-panel hidden"></div>
+    <div id="subtab-kidmap" class="subtab-panel hidden"></div>
   </div>
 
 </div>
@@ -790,6 +809,7 @@ function runDiagnosis(rows, bank){
     const total = row['總分'];
     const wrongItems = [];
     const codeAgg = {}; // 該生：代碼 -> {correct, total}（含答對與答錯的題目，用以判斷個別差異）
+    const responses = []; // 該生逐題作答紀錄（缺考／空值不計），供近似 KIDMAP 使用
     items.forEach(it=>{
       const ansKey = '作答' + String(it.item).padStart(3,'0');
       const corrKey = '正確' + String(it.item).padStart(3,'0');
@@ -802,6 +822,7 @@ function runDiagnosis(rows, bank){
         itemOptionAgg[it.item][ck] = (itemOptionAgg[it.item][ck] || 0) + 1;
       }
       const ok = Number(isCorrect) === 1;
+      responses.push({item: it.item, ok, chosen});
       if(ok){
         itemAgg[it.item].correct++;
       } else {
@@ -820,7 +841,7 @@ function runDiagnosis(rows, bank){
       codeAgg[code].total++;
       if(ok) codeAgg[code].correct++;
     });
-    return { seat, total, wrongItems, codeAgg };
+    return { seat, total, wrongItems, codeAgg, responses };
   });
 
   return { students, itemAgg, contentAgg, itemOptionAgg };
@@ -1193,6 +1214,307 @@ function buildOptionGapBox(result, bank){
   return box;
 }
 
+// ---------- 近似 KIDMAP（把「能力 θ」與「題目難度 b」放在同一把 Logit 尺上）----------
+// 作法（Rasch 單參數模型的簡化版，非正式 IRT 軟體的校準結果）：
+//  1. 題目難度 b：取自「全縣市難易鑑別度」（選填率參考檔）中，每一題「正確選項」的全縣答對率 p，
+//     轉成 Logit（b = ln((1-p)/p)，p 限制在 2%~98% 避免無限大），再減去全部題目的平均，讓尺度以 0 為中心。
+//  2. 學生能力 θ：以該生本次作答（缺考／空白的題目不計）的答對題數，依 Rasch 模型用牛頓法求解
+//     「各題答對機率總和 = 答對題數」的 θ；全對或全錯者以 0.5 題調整，避免估計值無限大。
+//  3. 四類分類（每位學生 × 每一題）：θ ≥ b 預期答對，答對＝合理答對、答錯＝迷思概念；
+//     θ < b 預期答錯，答錯＝合理答錯、答對＝優勢概念。
+// 限制：沒有全縣原始作答矩陣可做正式校準；Rasch 假設各題鑑別度相同；數值僅供診斷參考。
+
+// KIDMAP-CORE-BEGIN
+const KIDMAP_PASS_RATIO = 0.6;     // 分群時「通過」的答對比例門檻（相當於 25 題中答對 15 題）
+const KIDMAP_P_MIN = 0.02, KIDMAP_P_MAX = 0.98;
+
+// 由題本與參考檔算出各題難度。回傳 {ok, reason, diffs:{題號:{b,p}}, excluded:[題號], used}
+function kidmapItemDifficulties(bank, refRows){
+  if(!bank || !refRows || refRows.length===0) return {ok:false, reason:'noref', excluded:[], used:0};
+  const refByItem = {};
+  refRows.forEach(r=>{ refByItem[r.item] = r; });
+  const raw = [], excluded = [];
+  bank.items.forEach(it=>{
+    const ref = refByItem[it.item];
+    const key = String(it.correct).toUpperCase();
+    // 參考檔的標準答案必須與題本一致；不一致代表參考檔該題的「答對率」其實是另一個選項的選填率，不能拿來當難度
+    if(!ref || String(ref.correct).toUpperCase() !== key){ excluded.push(it.item); return; }
+    const pct = ref.rates ? ref.rates[key] : null;
+    if(pct==null || isNaN(pct)){ excluded.push(it.item); return; }
+    const p = Math.min(KIDMAP_P_MAX, Math.max(KIDMAP_P_MIN, pct/100));
+    raw.push({item: it.item, p, x: Math.log((1-p)/p)});
+  });
+  if(excluded.length > bank.items.length*0.2) return {ok:false, reason:'mismatch', excluded, used: raw.length};
+  if(raw.length < 10) return {ok:false, reason:'toofew', excluded, used: raw.length};
+  const mean = raw.reduce((s,r)=>s+r.x,0)/raw.length;
+  const diffs = {};
+  raw.forEach(r=>{ diffs[r.item] = {b: r.x-mean, p: r.p}; });
+  return {ok:true, diffs, excluded, used: raw.length};
+}
+
+// 以牛頓法估計單一學生的能力。bs：各題難度；flags：各題是否答對（true/false）。
+function kidmapEstimateTheta(bs, flags){
+  const L = bs.length;
+  if(L < 3) return null;
+  let r = 0; flags.forEach(f=>{ if(f) r++; });
+  let target = r, extreme = false;
+  if(r === 0){ target = 0.5; extreme = true; }
+  else if(r === L){ target = L - 0.5; extreme = true; }
+  let th = Math.log(target/(L-target));
+  for(let k=0; k<100; k++){
+    let s = 0, v = 0;
+    for(let i=0; i<L; i++){ const p = 1/(1+Math.exp(-(th-bs[i]))); s += p; v += p*(1-p); }
+    let step = (s-target)/v;
+    if(step > 1) step = 1; if(step < -1) step = -1;
+    th -= step;
+    if(th > 6) th = 6; if(th < -6) th = -6;
+    if(Math.abs(step) < 1e-8) break;
+  }
+  let info = 0;
+  for(let i=0; i<L; i++){ const p = 1/(1+Math.exp(-(th-bs[i]))); info += p*(1-p); }
+  return {theta: th, se: 1/Math.sqrt(info), extreme, raw: r, n: L};
+}
+
+// 分類單一學生：回傳 {seat, est, rows:[{item, ok, chosen, b, pExp, gap, cat, edge}]}
+// cat：rc 合理答對／mis 迷思概念／ri 合理答錯／adv 優勢概念；edge＝|θ-b| 小於一個標準誤（分類較不確定）
+function kidmapClassifyStudent(student, diffs){
+  const used = (student.responses||[]).filter(rp=>diffs[rp.item]);
+  const est = kidmapEstimateTheta(used.map(rp=>diffs[rp.item].b), used.map(rp=>rp.ok));
+  if(!est) return null;
+  const rows = used.map(rp=>{
+    const b = diffs[rp.item].b;
+    const gap = est.theta - b;
+    const pExp = 1/(1+Math.exp(-gap));
+    let cat;
+    if(gap >= 0) cat = rp.ok ? 'rc' : 'mis';
+    else cat = rp.ok ? 'adv' : 'ri';
+    return {item: rp.item, ok: rp.ok, chosen: rp.chosen, b, pExp, gap, cat, edge: Math.abs(gap) < est.se};
+  });
+  return {seat: student.seat, est, rows};
+}
+// KIDMAP-CORE-END
+
+let kidmapGroupValue = 'all'; // 班級 KIDMAP 目前的分群選擇：all 全班／pass 通過群／fail 待加強群
+const KIDMAP_CAT_NAME = {rc:'合理答對', mis:'迷思概念', ri:'合理答錯', adv:'優勢概念'};
+function fmtLogit(x){ return (x>=0?'+':'')+x.toFixed(2); }
+function kidmapPct(x){ return Math.round(x*100)+'%'; }
+function shortStem(s, n){ s = String(s||''); return s.length>n ? s.slice(0,n)+'…' : s; }
+
+const KIDMAP_NOTE_1 = 'KIDMAP 把「學生能力（θ）」與「題目難度（b）」放在同一把 Logit 尺上，比對「依能力預期的結果」與「實際作答」，分成四類：合理答對（能力≥難度、答對）、迷思概念（能力≥難度、卻答錯）、合理答錯（能力＜難度、答錯）、優勢概念（能力＜難度、卻答對）。';
+const KIDMAP_NOTE_2 = '這是「近似」版本：題目難度取自全縣各題答對率（Logit 轉換後置中），學生能力依本次答對題數以 Rasch 單參數模型估計（全對／全錯者採 0.5 題調整）。因為沒有全縣原始作答矩陣可做正式校準，且 Rasch 假設各題鑑別度相同，結果僅供診斷參考，不等同正式 IRT 軟體的分析；與全縣難度差距在一個標準誤以內的題目會標示「邊緣」（分類較不確定）。';
+const KIDMAP_NOTE_3 = '注意：本頁的「迷思概念」是 KIDMAP 的定義（能力足夠卻答錯，原因可能是真正的迷思，也可能是粗心或誘答力太強），與「②常見錯誤選項比較」中依全縣高低分組所貼的標籤定義不同，兩者可互相參照。班級人數較少時，各題的人數也很少，請搭配個別學生的 KIDMAP 一起解讀。';
+
+function kidmapFailText(kd, bank){
+  if(kd.reason === 'noref') return '目前沒有「全縣市難易鑑別度」（選填率參考檔）資料，而近似 KIDMAP 需要全縣各題答對率來估計題目難度。請改選有內建資料的年級／科目，或於上方上傳對應的參考檔後重新分析。';
+  if(kd.reason === 'mismatch') return '參考檔中有 '+kd.excluded.length+' 題的標準答案與目前題本「'+bank.examName+'」對不上（共 '+bank.totalItems+' 題），很可能不是同一份題本／科目，為避免產生錯誤的分析，已停止產生 KIDMAP。';
+  return '可用來估計難度的題目只有 '+kd.used+' 題，太少，無法產生可靠的 KIDMAP。';
+}
+function kidmapExcludedText(kd){
+  return '第 '+kd.excluded.join('、')+' 題的標準答案與參考檔不一致（或參考檔缺少資料），無法估計難度，這些題目已排除，不參與能力估計與分類。';
+}
+
+// 單一學生的 KIDMAP 圖：由難到易排列（上難下易），中間虛線為該生能力 θ，左欄答對、右欄答錯
+function buildKidmapVisual(map){
+  const rows = map.rows.slice().sort((a,b)=> (b.b - a.b) || (a.item - b.item));
+  const wrap = el('div',{class:'kidmap'});
+  wrap.appendChild(el('div',{class:'km-row km-head'},[el('div',null,['✔ 答對']), el('div',null,['難度 b']), el('div',null,['✘ 答錯'])]));
+  const th = map.est.theta;
+  let lineDone = false;
+  const lineRow = ()=> el('div',{class:'km-line'},['能力 θ = '+fmtLogit(th)+'　（虛線以上：較難，預期答錯；虛線以下：較易，預期答對）']);
+  rows.forEach(r=>{
+    if(!lineDone && r.b <= th){ wrap.appendChild(lineRow()); lineDone = true; }
+    const chip = el('span',{class:'km-chip km-'+r.cat+(r.edge?' km-edge':'')},['第'+r.item+'題'+(r.edge?' 邊緣':'')]);
+    chip.setAttribute('title', '第'+r.item+'題｜難度 b='+fmtLogit(r.b)+'｜依能力預期答對機率 '+kidmapPct(r.pExp)+'｜實際'+(r.ok?'答對':'答錯（選項 '+r.chosen+'）')+'｜'+KIDMAP_CAT_NAME[r.cat]);
+    wrap.appendChild(el('div',{class:'km-row'},[
+      el('div',{class:'km-cell km-left'}, r.ok ? [chip] : []),
+      el('div',{class:'km-mid'},[fmtLogit(r.b)]),
+      el('div',{class:'km-cell km-right'}, r.ok ? [] : [chip])
+    ]));
+  });
+  if(!lineDone) wrap.appendChild(lineRow());
+  return wrap;
+}
+function buildKidmapLegend(){
+  const lg = el('div',{class:'chart-legend', style:'margin:2px 0 10px;'});
+  ['rc','mis','ri','adv'].forEach(c=>{
+    lg.appendChild(el('span',null,[el('span',{class:'km-chip km-'+c, style:'margin-right:5px;'},[KIDMAP_CAT_NAME[c]])]));
+  });
+  lg.appendChild(el('span',null,[el('span',{class:'km-chip km-rc km-edge', style:'margin-right:5px;'},['邊緣']), '＝與難度差距在一個標準誤內，分類較不確定']));
+  return lg;
+}
+
+function buildStudentKidmapBox(student, kd, bank){
+  const map = kidmapClassifyStudent(student, kd.diffs);
+  if(!map) return null;
+  const box = el('div',{class:'priority-box gap-box'});
+  box.appendChild(el('h4',null,['這位學生的近似 KIDMAP']));
+  const e = map.est;
+  box.appendChild(el('div',{class:'priority-note'},[
+    '估計能力 θ = '+fmtLogit(e.theta)+'（± '+e.se.toFixed(2)+'，依 '+e.n+' 題中答對 '+e.raw+' 題估計'+(e.extreme?'，全對／全錯者採調整值，僅供參考':'')+'）。'+
+    '左欄為答對、右欄為答錯，越上方題目越難；虛線是該生的能力位置。'
+  ]));
+  box.appendChild(buildKidmapLegend());
+  box.appendChild(buildKidmapVisual(map));
+  const cnt = {rc:0, mis:0, ri:0, adv:0};
+  map.rows.forEach(r=>{ cnt[r.cat]++; });
+  box.appendChild(el('div',{class:'p-note', style:'margin:6px 0 10px;font-size:12.5px;color:var(--sub);'},[
+    '合理答對 '+cnt.rc+' 題　迷思概念 '+cnt.mis+' 題　合理答錯 '+cnt.ri+' 題　優勢概念 '+cnt.adv+' 題'
+  ]));
+  const mis = map.rows.filter(r=>r.cat==='mis').sort((a,b)=> b.pExp - a.pExp);
+  if(mis.length){
+    box.appendChild(el('div',{class:'priority-note', style:'font-weight:700;margin-top:6px;'},['迷思概念（能力足夠卻答錯，依「預期答對機率」由高到低，越上面越不合理）']));
+    mis.forEach(r=>{
+      const it = bank.items.find(x=>x.item===r.item) || {};
+      const misc = it.misconceptions ? it.misconceptions[String(r.chosen)] : null;
+      const item = el('div',{class:'priority-item'});
+      item.innerHTML = '<div class="p-head"><span class="pill code">第'+r.item+'題</span>'+
+        '<span style="color:var(--bad);font-weight:700;">預期答對機率 '+kidmapPct(r.pExp)+'，實際答錯（選項 '+escapeHtml(String(r.chosen))+'，正確為 '+escapeHtml(String(it.correct))+'）</span>'+
+        (r.edge?'<span class="tag inconsistent">邊緣</span>':'')+'</div>'+
+        '<div class="p-note">'+escapeHtml(it.stem||'')+'</div>'+
+        (misc ? '<div class="p-note" style="margin-top:2px;">可能迷思：'+escapeHtml(misc)+'</div>' : '');
+      box.appendChild(item);
+    });
+  }
+  const adv = map.rows.filter(r=>r.cat==='adv').sort((a,b)=> a.pExp - b.pExp);
+  if(adv.length){
+    box.appendChild(el('div',{class:'priority-note', style:'font-weight:700;margin-top:10px;'},['優勢概念（能力不足以預期答對、卻答對了的較難題，可作為鼓勵與延伸學習的切入點）']));
+    adv.forEach(r=>{
+      const it = bank.items.find(x=>x.item===r.item) || {};
+      const item = el('div',{class:'priority-item'});
+      item.innerHTML = '<div class="p-head"><span class="pill code">第'+r.item+'題</span>'+
+        '<span style="color:var(--brand);font-weight:700;">預期答對機率僅 '+kidmapPct(r.pExp)+'，卻答對了</span>'+
+        (r.edge?'<span class="tag inconsistent">邊緣</span>':'')+'</div>'+
+        '<div class="p-note">'+escapeHtml(it.stem||'')+'</div>';
+      box.appendChild(item);
+    });
+  }
+  return box;
+}
+
+// 班級層級的 KIDMAP（含「全班／通過群／待加強群」分群，對應 KIDMAP 指南 3-2、3-3）
+function renderKidmapClassPanel(panel, result, bank, kd){
+  panel.innerHTML = '';
+  panel.appendChild(el('h3',null,['近似 KIDMAP：班級診斷']));
+  const note = el('div',{class:'banner info', style:'margin-top:0;'});
+  [KIDMAP_NOTE_1, KIDMAP_NOTE_2, KIDMAP_NOTE_3].forEach((t,i)=>{ note.appendChild(el('div',{style:i?'margin-top:6px;':''},[t])); });
+  panel.appendChild(note);
+  if(!kd.ok){ panel.appendChild(el('div',{class:'banner warn'},[kidmapFailText(kd, bank)])); return; }
+  if(kd.excluded.length){ panel.appendChild(el('div',{class:'banner warn'},[kidmapExcludedText(kd)])); }
+
+  const allMaps = result.students.map(s=>kidmapClassifyStudent(s, kd.diffs)).filter(Boolean);
+  if(allMaps.length===0){ panel.appendChild(el('div',{class:'empty-priority'},['沒有足夠的作答資料可估計學生能力。'])); return; }
+  const isPass = m => (m.est.raw/m.est.n) >= KIDMAP_PASS_RATIO;
+  const passN = allMaps.filter(isPass).length, failN = allMaps.length - passN;
+
+  const row = el('div',{class:'filter-row', style:'margin-top:14px;'});
+  row.appendChild(el('label',{style:'font-size:13px;color:var(--sub);'},['分群檢視：']));
+  const sel = el('select',{id:'kidmapGroupSel'});
+  [['all','全班（'+allMaps.length+' 人）'],['pass','通過群：答對率 '+Math.round(KIDMAP_PASS_RATIO*100)+'% 以上（'+passN+' 人）'],['fail','待加強群：答對率低於 '+Math.round(KIDMAP_PASS_RATIO*100)+'%（'+failN+' 人）']].forEach(([v,t])=>{
+    const o = el('option',{value:v},[t]); if(v===kidmapGroupValue) o.setAttribute('selected','selected'); sel.appendChild(o);
+  });
+  sel.addEventListener('change', ()=>{ kidmapGroupValue = sel.value; renderKidmapClassPanel(panel, result, bank, kd); });
+  row.appendChild(sel);
+  panel.appendChild(row);
+
+  const maps = kidmapGroupValue==='pass' ? allMaps.filter(isPass) : (kidmapGroupValue==='fail' ? allMaps.filter(m=>!isPass(m)) : allMaps);
+  if(maps.length===0){ panel.appendChild(el('div',{class:'empty-priority'},['此分群目前沒有學生。'])); return; }
+  const groupHint = {
+    all: '',
+    pass: '通過群：這群學生的圖應以「合理答對」為主，請特別留意少數出現的「迷思概念」，往往是進階應用中容易混淆的陷阱題。',
+    fail: '待加強群：請先找出他們意外答對的「優勢概念」作為鼓勵切入點，補救時優先處理「難度最低（最基礎）」的迷思概念，而不是要求直接練習高難度題。'
+  }[kidmapGroupValue];
+  if(groupHint) panel.appendChild(el('div',{class:'note', style:'margin:0 0 10px;'},[groupHint]));
+
+  // 彙總
+  const thetas = maps.map(m=>m.est.theta);
+  const meanTheta = thetas.reduce((s,x)=>s+x,0)/thetas.length;
+  const agg = {};
+  bank.items.forEach(it=>{ if(kd.diffs[it.item]) agg[it.item] = {rc:0, mis:0, ri:0, adv:0, n:0, opts:{}}; });
+  const tot = {rc:0, mis:0, ri:0, adv:0};
+  maps.forEach(m=>m.rows.forEach(r=>{
+    const a = agg[r.item]; a[r.cat]++; a.n++; tot[r.cat]++;
+    if(r.cat==='mis'){ const k = String(r.chosen==null?'?':r.chosen); a.opts[k] = (a.opts[k]||0)+1; }
+  }));
+  const totAll = tot.rc+tot.mis+tot.ri+tot.adv;
+  panel.appendChild(el('div',{class:'p-note', style:'margin:6px 0 10px;font-size:13px;color:var(--ink);'},[
+    '此分群 '+maps.length+' 人，估計能力 θ 平均 '+fmtLogit(meanTheta)+'（範圍 '+fmtLogit(Math.min.apply(null,thetas))+' ～ '+fmtLogit(Math.max.apply(null,thetas))+'）。'+
+    '全部「學生×題目」中：合理答對 '+kidmapPct(tot.rc/totAll)+'、迷思概念 '+kidmapPct(tot.mis/totAll)+'、合理答錯 '+kidmapPct(tot.ri/totAll)+'、優勢概念 '+kidmapPct(tot.adv/totAll)+'。'
+  ]));
+
+  // 各題四類人數表
+  const table = el('table');
+  table.appendChild(el('tr',null,['題號','題目','全縣答對率','難度 b','合理答對','迷思概念','合理答錯','優勢概念'].map(t=>el('th',null,[t]))));
+  bank.items.forEach(it=>{
+    const a = agg[it.item]; if(!a) return;
+    const d = kd.diffs[it.item];
+    const cell = (cat, rgb)=>{
+      const v = a[cat], alpha = a.n ? (0.08 + 0.55*v/a.n) : 0;
+      return el('td',{style:'text-align:center;'+(v>0 ? 'background:rgba('+rgb+','+alpha.toFixed(2)+');' : 'color:var(--sub);')},[String(v)]);
+    };
+    const tr = el('tr',null,[
+      el('td',{html: '<span class="pill code">'+it.item+'</span>'}),
+      el('td',{title: it.stem},[shortStem(it.stem, 26)]),
+      el('td',null,[kidmapPct(d.p)]),
+      el('td',null,[fmtLogit(d.b)]),
+      cell('rc','30,138,95'), cell('mis','194,55,74'), cell('ri','91,98,112'), cell('adv','52,87,213')
+    ]);
+    table.appendChild(tr);
+  });
+  const tw = el('div',{style:'overflow-x:auto;margin-bottom:14px;'}); tw.appendChild(table);
+  panel.appendChild(tw);
+
+  // 迷思概念的選項誘答力分析（3-2）
+  const misItems = bank.items.filter(it=>agg[it.item] && agg[it.item].mis>0);
+  misItems.sort((x,y)=>{
+    const ax = agg[x.item], ay = agg[y.item], bx = kd.diffs[x.item].b, by = kd.diffs[y.item].b;
+    if(kidmapGroupValue==='fail') return (bx-by) || (ay.mis-ax.mis); // 待加強群：先看最基礎（難度最低）的迷思
+    return (ay.mis-ax.mis) || (bx-by);
+  });
+  const mbox = el('div',{class:'priority-box gap-box'});
+  mbox.appendChild(el('h4',null,['迷思概念的選項分析（能力足夠卻答錯的學生，選了哪個錯誤選項）']));
+  mbox.appendChild(el('div',{class:'priority-note'},[
+    (kidmapGroupValue==='fail' ? '依題目難度由低到高排序（最基礎的迷思優先）。' : '依「迷思概念人數」由多到少排序。')+
+    '若多位能力足夠的學生集中選同一個錯誤選項，代表該選項背後可能有共通的教學盲點，建議優先釐清。'
+  ]));
+  if(misItems.length===0){
+    mbox.appendChild(el('div',{class:'empty-priority'},['此分群沒有出現「迷思概念」情形（能力足夠卻答錯）。']));
+  } else {
+    misItems.slice(0,8).forEach(it=>{
+      const a = agg[it.item], d = kd.diffs[it.item];
+      const opts = Object.keys(a.opts).sort((p,q)=> a.opts[q]-a.opts[p]);
+      const optText = opts.map(o=> '選項'+o+'：'+a.opts[o]+' 人（'+kidmapPct(a.opts[o]/a.mis)+'）').join('、');
+      const topMisc = it.misconceptions ? it.misconceptions[opts[0]] : null;
+      const item = el('div',{class:'priority-item'});
+      item.innerHTML = '<div class="p-head"><span class="pill code">第'+it.item+'題</span>'+
+        '<span style="color:var(--bad);font-weight:700;">迷思概念 '+a.mis+'／'+a.n+' 人</span>'+
+        '<span class="muted">難度 b='+fmtLogit(d.b)+'　全縣答對率 '+kidmapPct(d.p)+'</span></div>'+
+        '<div class="p-note">'+escapeHtml(it.stem)+'</div>'+
+        '<div class="p-note" style="margin-top:2px;">錯誤選項分布：'+escapeHtml(optText)+'</div>'+
+        (topMisc ? '<div class="p-note" style="margin-top:2px;">最多人選的選項 '+escapeHtml(opts[0])+' 可能迷思：'+escapeHtml(topMisc)+'</div>' : '');
+      mbox.appendChild(item);
+    });
+  }
+  panel.appendChild(mbox);
+
+  // 優勢概念（意外答對的難題）
+  const advItems = bank.items.filter(it=>agg[it.item] && agg[it.item].adv>0).sort((x,y)=> (agg[y.item].adv-agg[x.item].adv) || (kd.diffs[y.item].b-kd.diffs[x.item].b));
+  if(advItems.length){
+    const abox = el('div',{class:'priority-box gap-box'});
+    abox.appendChild(el('h4',null,['優勢概念（能力不足以預期答對、卻答對的較難題）']));
+    abox.appendChild(el('div',{class:'priority-note'},['可能是猜對，也可能是學生在該概念上有超前的表現；可作為鼓勵學生與延伸學習的切入點。']));
+    advItems.slice(0,5).forEach(it=>{
+      const a = agg[it.item], d = kd.diffs[it.item];
+      const item = el('div',{class:'priority-item'});
+      item.innerHTML = '<div class="p-head"><span class="pill code">第'+it.item+'題</span>'+
+        '<span style="color:var(--brand);font-weight:700;">優勢概念 '+a.adv+'／'+a.n+' 人</span>'+
+        '<span class="muted">難度 b='+fmtLogit(d.b)+'　全縣答對率 '+kidmapPct(d.p)+'</span></div>'+
+        '<div class="p-note">'+escapeHtml(it.stem)+'</div>';
+      abox.appendChild(item);
+    });
+    panel.appendChild(abox);
+  }
+}
+
 function renderReport(result, bank, subject, grade, compareRegion){
   document.getElementById('reportEmpty').classList.add('hidden');
   const shared = document.getElementById('reportShared');
@@ -1200,7 +1522,8 @@ function renderReport(result, bank, subject, grade, compareRegion){
   const panelOptionGap = document.getElementById('subtab-optiongap');
   const panelFullList = document.getElementById('subtab-fulllist');
   const panelStudents = document.getElementById('subtab-students');
-  [shared, panelOverview, panelOptionGap, panelFullList, panelStudents].forEach(p=>{ p.innerHTML=''; });
+  const panelKidmap = document.getElementById('subtab-kidmap');
+  [shared, panelOverview, panelOptionGap, panelFullList, panelStudents, panelKidmap].forEach(p=>{ p.innerHTML=''; });
   document.getElementById('reportShared').classList.remove('hidden');
   document.getElementById('reportSubtabs').classList.remove('hidden');
   const subj = DATA.subjects[subject] || DATA.subjects['數學'];
@@ -1278,6 +1601,10 @@ function renderReport(result, bank, subject, grade, compareRegion){
   });
   panelFullList.appendChild(ct);
 
+  // ⑤近似 KIDMAP（需要全縣各題答對率估計題目難度；④個別學生診斷內也會引用同一份難度）
+  const kd = kidmapItemDifficulties(bank, optionRefRows);
+  renderKidmapClassPanel(panelKidmap, result, bank, kd);
+
   // ④個別學生診斷
   panelStudents.appendChild(el('h3',null,['個別學生診斷（點擊展開）']));
   const flagged = result.students.filter(s=>s.wrongItems.length>0);
@@ -1296,6 +1623,7 @@ function renderReport(result, bank, subject, grade, compareRegion){
     bodyDiv.appendChild(buildStudentCountyGapBox(s, subject, grade, subj));
     const pbox = buildStudentPriorityBox(s, subject, subj);
     if(pbox) bodyDiv.appendChild(pbox);
+    if(kd.ok){ const kbox = buildStudentKidmapBox(s, kd, bank); if(kbox) bodyDiv.appendChild(kbox); }
     bodyDiv.appendChild(el('h4',{style:'margin:14px 0 6px;font-size:13.5px;'},['逐題詳情']));
     s.wrongItems.forEach(w=>{
       const targetHtml = w.target.map(code_html).join('　');
