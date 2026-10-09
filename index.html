@@ -237,7 +237,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 </div>
 
 <footer>
-  系統說明：本系統「數學．三～八年級」「國語文．一～八年級」「英語文．五～八年級」「閱讀素養．五～九年級」的題目對應與先備經驗推論，是依據使用者提供之課程綱要、課程手冊與 114 學年度學力檢測題本/答案人工比對建置，屬於系統輔助推論結果，正式使用前建議由學科教師複核。目前系統只建置了數學的「學習內容」代碼表，故數學的診斷報告以學習內容（學習主題）分組呈現；國語文與英語文的課綱雖然也有學習內容，但本系統尚未建置其代碼表，故兩科診斷報告暫以「學習表現」代碼分組呈現。國語文已從課程手冊擷取聆聽、口語表達、標音符號與運用、識字與寫字、閱讀、寫作六大類別（第一～四學習階段）的學習表現代碼，英語文已擷取聽、說、讀、寫、綜合應用五大類別（第二～四學習階段）的學習表現代碼；閱讀素養檢測（如花蓮縣基本學習能力檢核）借用國語文「閱讀」類別代碼作為對應依據，非屬正式課綱之獨立科目分類。其餘年級／科目尚無題目對應資料，僅供課綱瀏覽參考，無法產生診斷報告。分析時若偵測到檔案的科目、年級或題數與系統建置的題庫不符，系統會直接停止分析並顯示原因，不會勉強產出報告。診斷報告中的「建議優先加強②」是依「學習階段→類別→課綱序號」估計各代碼在課綱中的基礎程度後排序（愈基礎排愈前面），並非依答錯人數或答錯題數排序；個別學生的優先建議並會進一步比對該生在同一代碼的其他題目是否答對，藉此區分「這個主題的其他題也都不會」與「這一題可能是看錯題目、選錯選項等個別失誤」兩種情況。這些排序與判斷皆為系統依既有資料自動估算的輔助參考，並非教育測驗專業判斷，正式使用前仍建議由學科教師複核。
+  系統說明：本系統「數學．三～八年級」「國語文．一～八年級」「英語文．五～八年級」「閱讀素養．五～九年級」的題目對應與先備經驗推論，是依據使用者提供之課程綱要、課程手冊與 114 學年度學力檢測題本/答案人工比對建置，屬於系統輔助推論結果，正式使用前建議由學科教師複核。目前系統只建置了數學的「學習內容」代碼表，故數學的診斷報告以學習內容（學習主題）分組呈現；國語文與英語文的課綱雖然也有學習內容，但本系統尚未建置其代碼表，故兩科診斷報告暫以「學習表現」代碼分組呈現。國語文已從課程手冊擷取聆聽、口語表達、標音符號與運用、識字與寫字、閱讀、寫作六大類別（第一～四學習階段）的學習表現代碼，英語文已擷取聽、說、讀、寫、綜合應用五大類別（第二～四學習階段）的學習表現代碼；閱讀素養檢測（如花蓮縣基本學習能力檢核）借用國語文「閱讀」類別代碼作為對應依據，非屬正式課綱之獨立科目分類。其餘年級／科目尚無題目對應資料，僅供課綱瀏覽參考，無法產生診斷報告。分析時若偵測到檔案的科目、年級或題數與系統建置的題庫不符，系統會直接停止分析並顯示原因，不會勉強產出報告。診斷報告中的「該先回頭確認的基礎主題」清單是依「學習階段→類別→課綱序號」估計各代碼在課綱中的基礎程度後排序（愈基礎排愈前面），並非依答錯人數或答錯題數排序；個別學生的清單並會進一步比對該生在同一代碼的其他題目是否答對，藉此區分「這個主題的其他題也都不會」與「這一題可能是看錯題目、選錯選項等個別失誤」兩種情況。這些排序與判斷皆為系統依既有資料自動估算的輔助參考，並非教育測驗專業判斷，正式使用前仍建議由學科教師複核。
 </footer>
 
 <script>
@@ -872,7 +872,7 @@ function runDiagnosis(rows, bank){
   return { students, itemAgg, contentAgg, itemOptionAgg };
 }
 
-// ---------- 基礎程度估算（用於「優先改善」排序，非答錯人數／答錯題數排序） ----------
+// ---------- 基礎程度估算（用於「該先回頭確認的基礎主題」排序，非答錯人數／答錯題數排序） ----------
 // 依課綱本身已標註的「學習階段」「能力類別」「課綱序號」估算基礎程度：階段愈早、
 // 類別在課綱中排序愈前面（如聆聽/口語表達通常被視為較識字/閱讀寫作更基礎的能力）、
 // 序號愈小，視為愈基礎。純粹由既有課綱資料換算而得，不涉及任何額外的 AI 推論。
@@ -970,9 +970,9 @@ function buildBarChart(rows, compareLabel){
   return box;
 }
 
-// ---------- 優先改善（第一項：與全縣答對率的落差，非依基礎程度） ----------
+// ---------- 落後全縣最多的學習主題（與全縣答對率的落差，非依基礎程度） ----------
 // 一律以「縣市」（全縣整體）為基準，與統計圖上方選擇的比較地區無關：
-// 全縣普遍答對率高、但本班（或個別學生）在同一學習主題的答對率偏低，視為落差最大、最優先改善。
+// 全縣普遍答對率高、但本班（或個別學生）在同一學習主題的答對率偏低，視為落差最大。
 function classCountyGapRows(contentAgg, subject, grade){
   return Object.entries(contentAgg)
     .filter(([code,agg])=> agg.total>0)
@@ -990,12 +990,12 @@ function buildClassCountyGapBox(contentAgg, subject, grade, subj){
   const rows = classCountyGapRows(contentAgg, subject, grade);
   const hasData = hasAnyCompareCode('縣市', subject, grade);
   const box = el('div',{class:'priority-box gap-box'});
-  box.appendChild(el('h4',null,['建議優先改善①：與全縣答對率落差最大']));
+  box.appendChild(el('h4',null,['落後全縣最多的'+UNIT]));
   box.appendChild(el('div',{class:'priority-note'},['以「全縣答對率－本班答對率」排序：全縣普遍答對率較高、但本班答對率明顯偏低的'+UNIT+'排在最前面，代表本班在該'+UNIT+'上落後全縣平均較多，建議優先確認並補強。']));
   if(!hasData){
     box.appendChild(el('div',{class:'empty-priority'},['目前沒有「全縣」在本科目、本年級的逐項'+UNIT+'資料可供比較。']));
   } else if(rows.length===0){
-    box.appendChild(el('div',{class:'empty-priority'},['本班在已測得的'+UNIT+'中，答對率皆不低於全縣平均，暫無此類優先改善建議。']));
+    box.appendChild(el('div',{class:'empty-priority'},['本班在已測得的'+UNIT+'中，答對率皆不低於全縣平均，暫無落後全縣的項目。']));
   } else {
     rows.slice(0,5).forEach(r=>{
       const info = subj.content[r.code];
@@ -1028,12 +1028,12 @@ function buildStudentCountyGapBox(student, subject, grade, subj){
   const rows = studentCountyGapRows(student, subject, grade);
   const hasData = hasAnyCompareCode('縣市', subject, grade);
   const box = el('div',{class:'priority-box gap-box'});
-  box.appendChild(el('h4',null,['這位學生建議優先改善①：與全縣答對率落差最大']));
+  box.appendChild(el('h4',null,['這位學生落後全縣最多的'+UNIT]));
   box.appendChild(el('div',{class:'priority-note'},['以「全縣答對率－這位學生答對率」排序：全縣普遍答對率較高、但這位學生在同一'+UNIT+'答對率偏低（含答錯）的項目排在最前面。']));
   if(!hasData){
     box.appendChild(el('div',{class:'empty-priority'},['目前沒有「全縣」在本科目、本年級的逐項'+UNIT+'資料可供比較。']));
   } else if(rows.length===0){
-    box.appendChild(el('div',{class:'empty-priority'},['這位學生答錯的'+UNIT+'中，答對率皆不低於全縣平均，暫無此類優先改善建議。']));
+    box.appendChild(el('div',{class:'empty-priority'},['這位學生答錯的'+UNIT+'中，答對率皆不低於全縣平均，暫無落後全縣的項目。']));
   } else {
     rows.slice(0,6).forEach(r=>{
       const info = subj.content[r.code];
@@ -1049,7 +1049,7 @@ function buildStudentCountyGapBox(student, subject, grade, subj){
   return box;
 }
 
-// ---------- 優先改善（依基礎程度，非依答錯人數／題數） ----------
+// ---------- 該先回頭確認的基礎主題（依基礎程度，非依答錯人數／題數） ----------
 function classPriorityRows(contentAgg, subject){
   return Object.entries(contentAgg)
     .filter(([code,agg])=> agg.total>0 && agg.correct<agg.total)
@@ -1060,10 +1060,10 @@ function classPriorityRows(contentAgg, subject){
 function buildClassPriorityBox(contentAgg, subject, subj){
   const rows = classPriorityRows(contentAgg, subject);
   const box = el('div',{class:'priority-box'});
-  box.appendChild(el('h4',null,['建議優先加強②：依基礎程度排序（非依答錯人數排序）']));
-  box.appendChild(el('div',{class:'priority-note'},['依課綱學習階段與類別估算「較基礎」的已答錯代碼並排序在前，即使它們的答錯人數不是全班最多，也建議優先確認學生是否已掌握。']));
+  box.appendChild(el('h4',null,['該先回頭確認的基礎'+UNIT]));
+  box.appendChild(el('div',{class:'priority-note'},['依課綱基礎程度排序，不是依答錯人數：依課綱學習階段與類別估算「較基礎」的已答錯代碼並排序在前，即使它們的答錯人數不是全班最多，也建議先確認學生是否已掌握。如果同一個'+UNIT+'也出現在上方「落後全縣最多的'+UNIT+'」清單，最值得先花時間。']));
   if(rows.length===0){
-    box.appendChild(el('div',{class:'empty-priority'},['全班在已測得的'+UNIT+'中皆全數答對，暫無優先加強建議。']));
+    box.appendChild(el('div',{class:'empty-priority'},['全班在已測得的'+UNIT+'中皆全數答對，暫無需要回頭確認的項目。']));
   } else {
     rows.slice(0,5).forEach(r=>{
       const info = subj.content[r.code];
@@ -1093,8 +1093,8 @@ function buildStudentPriorityBox(student, subject, subj){
   const rows = studentPriorityRows(student, subject);
   if(rows.length===0) return null;
   const box = el('div',{class:'priority-box'});
-  box.appendChild(el('h4',null,['這位學生建議優先加強②：依基礎程度排序']));
-  box.appendChild(el('div',{class:'priority-note'},['已比對該生在同一'+UNIT+'的其他題目是否答對：「多次不會」表示同代碼題目全部答錯，較可能是能力尚未掌握；「疑似個別失誤」表示同代碼的其他題目有答對，這一題答錯較可能是看錯題目、選錯選項等個別狀況，而非該能力真正不足。']));
+  box.appendChild(el('h4',null,['這位學生該先回頭確認的基礎'+UNIT]));
+  box.appendChild(el('div',{class:'priority-note'},['依課綱基礎程度排序（愈基礎愈前面）。已比對該生在同一'+UNIT+'的其他題目是否答對：「多次不會」表示同代碼題目全部答錯，較可能是能力尚未掌握；「疑似個別失誤」表示同代碼的其他題目有答對，這一題答錯較可能是看錯題目、選錯選項等個別狀況，而非該能力真正不足。']));
   rows.slice(0,6).forEach(r=>{
     const info = subj.content[r.code];
     const pct = Math.round(r.agg.correct/r.agg.total*100);
@@ -1621,7 +1621,7 @@ function renderReport(result, bank, subject, grade, compareRegion){
     shared.appendChild(el('div',{class:'note', style:'margin:-4px 0 12px;'},['圖中淡色直線為「'+compareLabel+'」在本科目、本年級中，「同一'+UNIT+'」所對應題目的平均答對率，逐項各自對照（部分'+UNIT+'若該地區缺乏對應資料，則該列不顯示比較線）。']));
   }
 
-  // ①班級總覽：各學習主題答對率及建議優先改善
+  // 班級總覽：各學習主題答對率及兩個清單（落後全縣／基礎確認）
   panelOverview.appendChild(el('h3',null,['班級總覽：各'+UNIT+'答對率']));
   panelOverview.appendChild(el('div',{class:'note', style:'margin:-6px 0 10px;'},['每個'+UNIT+'通常只包含少數幾題（括號內是答對人次／作答人次），題數少時請搭配人數判讀，不要單看百分比。']));
   const contentEntries = Object.entries(result.contentAgg).sort((a,b)=> (a[1].correct/a[1].total) - (b[1].correct/b[1].total));
