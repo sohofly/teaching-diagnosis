@@ -199,7 +199,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
     <div id="uploadBanner"></div>
     <div id="optionRefBanner"></div>
     <details id="optionRefDetails" class="fold">
-      <summary>進階：自行上傳「全縣市難易鑑別度」參考檔（多數老師不需要）</summary>
+      <summary>進階：自行上傳「全縣參考資料」檔（多數老師不需要）</summary>
       <div class="controls" style="margin-top:6px;">
         <div class="field">
           <label>數學三～八年級、國語文三～八年級、英語文五～八年級，系統已內建完整的全縣資料，會自動套用，不需要上傳。上傳檔案會「取代」內建資料，而且舊格式的檔案沒有鑑別度與 Rasch 題目難度，會少掉部分分析。只有在「沒有內建資料的科目（例如國語文一、二年級、閱讀素養）」或「新的考試年度」時才需要上傳。支援「題號／標準答案／校．花蓮市．縣市 各選項答題率」或「題號／正確答案／鑑別度／難易度／高分組·低分組各選項作答率」兩種格式，系統會自動判斷。</label>
@@ -237,7 +237,7 @@ var o=[];var l=Array.isArray(e);for(f=n.s.c;f<=n.e.c;++f)s[f]=ya(f);for(var c=n.
 </div>
 
 <footer>
-  系統說明：本系統「數學．三～八年級」「國語文．一～八年級」「英語文．五～八年級」「閱讀素養．五～九年級」的題目對應與先備經驗推論，是依據使用者提供之課程綱要、課程手冊與 114 學年度學力檢測題本/答案人工比對建置，屬於系統輔助推論結果，正式使用前建議由學科教師複核。數學課綱訂有獨立的「學習內容」代碼表，故診斷報告以學習內容代碼分組呈現；國語文與英語文課綱並未另訂學習內容代碼表（國語文課程手冊並明載無此表），故兩科診斷報告直接以「學習表現」代碼分組呈現。國語文已從課程手冊擷取聆聽、口語表達、標音符號與運用、識字與寫字、閱讀、寫作六大類別（第一～四學習階段）的學習表現代碼，英語文已擷取聽、說、讀、寫、綜合應用五大類別（第二～四學習階段）的學習表現代碼；閱讀素養檢測（如花蓮縣基本學習能力檢核）借用國語文「閱讀」類別代碼作為對應依據，非屬正式課綱之獨立科目分類。其餘年級／科目尚無題目對應資料，僅供課綱瀏覽參考，無法產生診斷報告。分析時若偵測到檔案的科目、年級或題數與系統建置的題庫不符，系統會直接停止分析並顯示原因，不會勉強產出報告。診斷報告中的「優先建議加強」是依「學習階段→能力類別→課綱序號」估計各代碼在課綱中的基礎程度後排序（愈基礎排愈前面），並非依答錯人數或答錯題數排序；個別學生的優先建議並會進一步比對該生在同一代碼的其他題目是否答對，藉此區分「該能力多次測驗都不會」與「這一題可能是看錯題目、選錯選項等個別失誤」兩種情況。這些排序與判斷皆為系統依既有資料自動估算的輔助參考，並非教育測驗專業判斷，正式使用前仍建議由學科教師複核。
+  系統說明：本系統「數學．三～八年級」「國語文．一～八年級」「英語文．五～八年級」「閱讀素養．五～九年級」的題目對應與先備經驗推論，是依據使用者提供之課程綱要、課程手冊與 114 學年度學力檢測題本/答案人工比對建置，屬於系統輔助推論結果，正式使用前建議由學科教師複核。目前系統只建置了數學的「學習內容」代碼表，故數學的診斷報告以學習內容（學習主題）分組呈現；國語文與英語文的課綱雖然也有學習內容，但本系統尚未建置其代碼表，故兩科診斷報告暫以「學習表現」代碼分組呈現。國語文已從課程手冊擷取聆聽、口語表達、標音符號與運用、識字與寫字、閱讀、寫作六大類別（第一～四學習階段）的學習表現代碼，英語文已擷取聽、說、讀、寫、綜合應用五大類別（第二～四學習階段）的學習表現代碼；閱讀素養檢測（如花蓮縣基本學習能力檢核）借用國語文「閱讀」類別代碼作為對應依據，非屬正式課綱之獨立科目分類。其餘年級／科目尚無題目對應資料，僅供課綱瀏覽參考，無法產生診斷報告。分析時若偵測到檔案的科目、年級或題數與系統建置的題庫不符，系統會直接停止分析並顯示原因，不會勉強產出報告。診斷報告中的「建議優先加強②」是依「學習階段→類別→課綱序號」估計各代碼在課綱中的基礎程度後排序（愈基礎排愈前面），並非依答錯人數或答錯題數排序；個別學生的優先建議並會進一步比對該生在同一代碼的其他題目是否答對，藉此區分「這個主題的其他題也都不會」與「這一題可能是看錯題目、選錯選項等個別失誤」兩種情況。這些排序與判斷皆為系統依既有資料自動估算的輔助參考，並非教育測驗專業判斷，正式使用前仍建議由學科教師複核。
 </footer>
 
 <script>
@@ -317,10 +317,10 @@ function renderCurriculum(){
     }
   } else {
     const noteText = subject === '國語文'
-      ? '取自十二年國教國語文領域課程手冊「學習重點解析」，含聆聽、口語表達、標音符號與運用、識字與寫字、閱讀、寫作六大類別的學習表現代碼；國語文課綱並未另訂「學習內容」代碼表（課程手冊已明載），故診斷報告直接以「學習表現」代碼呈現，依學習階段篩選顯示。'
+      ? '取自十二年國教國語文領域課程手冊「學習重點解析」，含聆聽、口語表達、標音符號與運用、識字與寫字、閱讀、寫作六大類別的學習表現代碼；本系統尚未建置國語文的「學習內容」代碼表，故診斷報告暫以「學習表現」代碼呈現，依學習階段篩選顯示。'
       : subject === '閱讀素養'
       ? '閱讀素養檢測（如花蓮縣基本學習能力檢核）借用十二年國教國語文課綱「閱讀」類別的學習表現代碼作為對應依據，故此處僅顯示「閱讀」類別的代碼，依學習階段篩選顯示；國小高年級卷（五、六年級適用）對應第III學習階段，國中卷（七、八、九年級適用）對應第IV學習階段。'
-      : '取自十二年國教英語文領域課程手冊「學習重點解析」，含聽、說、讀、寫、綜合應用五大類別的學習表現代碼；因課程手冊之「學習內容」代碼表尚未完整數位化，診斷報告暫以「學習表現」代碼呈現，依學習階段篩選顯示。';
+      : '取自十二年國教英語文領域課程手冊「學習重點解析」，含聽、說、讀、寫、綜合應用五大類別的學習表現代碼；本系統尚未建置英語文的「學習內容」代碼表，診斷報告暫以「學習表現」代碼呈現，依學習階段篩選顯示。';
     document.getElementById('curNote').textContent = noteText;
     const rows = subj.perf.filter(p=>p.stage===stage);
     if(rows.length===0){
@@ -346,7 +346,8 @@ let uploadedRows = null; // 解析後的學生資料 (array of objects)
 let uploadedMeta = null; // {學年, 測驗年級, 測驗科目}
 let lastReport = null; // {result, bank, subject, grade} — 快取最近一次分析結果，供切換比較對象時重繪用
 let uploadedHeader = null; // 原始欄位名稱陣列
-let optionRefRows = null; // 選填率參考檔解析後資料：[{item, correct, rates:{'1':全縣答1率,...}}]，選填，未上傳則為 null
+let optionRefRows = null; // 全縣參考資料檔解析後資料：[{item, correct, rates:{'1':全縣答1率,...}}]，選填，未上傳則為 null
+let UNIT = '學習主題'; // 報表用語：數學＝學習主題，國語文／英語文＝學習表現（renderReport 依科目設定）
 let optionRefIsBuiltin = false; // 目前 optionRefRows 是否來自系統內建資料（DATA.optionRefBanks），而非使用者手動上傳
 let optionRefPrior = null; // 內建資料附的能力先驗 {mu, sd}（EAP 用）；自行上傳的參考檔為 null
 let optionRefIsRich = false; // 目前 optionRefRows 是否為「含鑑別度／高低分組」的豐富格式（見 parseRichOptionRef）
@@ -491,18 +492,18 @@ function parsePivotFormat(rows, header0, file, banner){
   }
 }
 
-// 選填率參考檔：格式比照「六年級國語選項」類型的匯出檔（題號／標準答案／
+// 全縣參考資料檔：格式比照「六年級國語選項」類型的匯出檔（題號／標準答案／
 // 校．花蓮市．縣市 各選項答題率），選填。上傳後供診斷報告加入「錯誤選項選填率比較」列表，
 // 比對本班在同一題「錯誤選項」的選填率是否高於全縣。僅使用其中的「縣市」欄位。
 const FULLWIDTH_DIGITS = '０１２３４５６７８９';
 function normalizeDigits(s){
   return String(s).replace(/[０-９]/g, c=>String(FULLWIDTH_DIGITS.indexOf(c)));
 }
-// 選填率參考檔與學生資料檔有可能屬於不同科目／年級（本系統無法從參考檔本身判斷科目，
+// 全縣參考資料檔與學生資料檔有可能屬於不同科目／年級（本系統無法從參考檔本身判斷科目，
 // 只能簡單比對題數是否相符），因此每次讀取後都固定顯示這則提醒，並在題數不符時另外提出明顯警示。
-// 只要「學生資料檔」或「選填率參考檔」任一邊重新上傳，都會重新比對一次——避免使用者只換了
+// 只要「學生資料檔」或「全縣參考資料檔」任一邊重新上傳，都會重新比對一次——避免使用者只換了
 // 學生資料檔、卻忘了同步更新參考檔，導致畫面停留在舊的（可能已經不成立的）「相符」訊息。
-const OPTION_REF_REMINDER = '提醒：選填率參考檔本身沒有標註科目／年級，系統僅能簡單比對「題數」是否相符，無法確認科目是否真的一致。請務必自行確認此參考檔與您上傳的學生資料屬於「相同科目、相同年級（同一份題本）」，題數相符不代表科目一定相同。';
+const OPTION_REF_REMINDER = '提醒：全縣參考資料檔本身沒有標註科目／年級，系統僅能簡單比對「題數」是否相符，無法確認科目是否真的一致。請務必自行確認此參考檔與您上傳的學生資料屬於「相同科目、相同年級（同一份題本）」，題數相符不代表科目一定相同。';
 let optionRefFileName = null; // 目前已讀取的參考檔檔名，供重新比對時顯示用
 function renderOptionRefBanner(){
   const banner = document.getElementById('optionRefBanner');
@@ -514,7 +515,7 @@ function renderOptionRefBanner(){
   if(optionRefIsBuiltin){
     // 系統內建資料是依「學年-科目-年級」鍵值精準比對後才套用，科目／年級必定相符，
     // 不需要像使用者手動上傳那樣提醒「請自行確認科目是否一致」，只保留題數安全檢查。
-    const msg = '系統已內建「'+escapeHtml(optionRefFileName||'')+'」作為此年級／科目的選填率參考資料，共 '+optionRefRows.length+' 題（全縣各選項答題率）'+richNote+'。分析報告將自動加入「錯誤選項選填率比較」列表。';
+    const msg = '系統已內建「'+escapeHtml(optionRefFileName||'')+'」作為此年級／科目的全縣參考資料，共 '+optionRefRows.length+' 題（全縣各選項答題率）'+richNote+'。分析報告將自動加入「錯誤選項選填率比較」列表。';
     if(bank && optionRefRows.length !== bank.totalItems){
       banner.appendChild(el('div',{class:'banner warn'},[msg+'　但題數（'+optionRefRows.length+' 題）與目前題本「'+bank.examName+'」（'+bank.totalItems+' 題）不相符，比對結果可能是錯的。']));
     } else {
@@ -523,7 +524,7 @@ function renderOptionRefBanner(){
     banner.appendChild(el('div',{class:'note', style:'margin-top:6px;'},['一般情況不需要另外上傳；若有新年度或自訂的資料，可在下方「進階」自行上傳參考檔，將取代此內建資料。']));
     return;
   }
-  let msg = '已讀取選填率參考檔「'+escapeHtml(optionRefFileName||'')+'」，共 '+optionRefRows.length+' 題（全縣各選項答題率）'+richNote+'。分析報告將自動加入「錯誤選項選填率比較」列表。';
+  let msg = '已讀取全縣參考資料檔「'+escapeHtml(optionRefFileName||'')+'」，共 '+optionRefRows.length+' 題（全縣各選項答題率）'+richNote+'。分析報告將自動加入「錯誤選項選填率比較」列表。';
   if(!bank){
     banner.appendChild(el('div',{class:'banner info'},[msg+'（尚未偵測到學生資料對應的題本，請先上傳學生資料檔案，系統才能進一步比對題數是否相符。）']));
   } else if(optionRefRows.length !== bank.totalItems){
@@ -535,7 +536,7 @@ function renderOptionRefBanner(){
   }
   banner.appendChild(el('div',{class:'note', style:'margin-top:6px;'},[OPTION_REF_REMINDER]));
 }
-// 「豐富格式」選填率參考檔解析：題號／正確答案／答題人數／鑑別度／難易度／高分組人數／低分組人數／
+// 「豐富格式」全縣參考資料檔解析：題號／正確答案／答題人數／鑑別度／難易度／高分組人數／低分組人數／
 // 答對率／答N人數／答N率／高分組 答N人數／高分組 答N率／低分組 答N人數／低分組 答N率（如「data 1.xls」）。
 // 比舊格式（題號／標準答案／縣市 答N率）多了鑑別度、難易度、以及高分組／低分組各選項作答率，
 // 可用來額外提醒「題目本身鑑別度是否偏低」，以及「錯誤選項究竟是高分組還是低分組較常選」。
@@ -648,7 +649,7 @@ document.getElementById('optionRefInput').addEventListener('change', async (e)=>
     optionRefIsBuiltin = false;
     optionRefIsRich = false;
     optionRefPrior = null;
-    banner.appendChild(el('div',{class:'banner bad'},['選填率參考檔讀取失敗：'+err.message+'　（此檔案為選填，不影響一般診斷分析）']));
+    banner.appendChild(el('div',{class:'banner bad'},['全縣參考資料檔讀取失敗：'+err.message+'　（此檔案為選填，不影響一般診斷分析）']));
     // 手動上傳失敗後，若目前題本仍有系統內建資料可用，改套用內建資料，避免整個功能因單次讀檔失敗而消失
     syncBuiltinOptionRef();
   }
@@ -680,7 +681,7 @@ function findExamBank(){
   if(!key) return null;
   return DATA.examBanks[key] || null;
 }
-// 若目前的學生資料所對應的題本，系統剛好內建了選填率參考檔（DATA.optionRefBanks），
+// 若目前的學生資料所對應的題本，系統剛好內建了全縣參考資料檔（DATA.optionRefBanks），
 // 且使用者尚未手動上傳自己的參考檔（或先前套用的正是內建資料），就自動套用／更新內建資料；
 // 若換成沒有內建資料的年級／科目，且先前顯示的是內建資料，則清除，避免誤用到不相符的題本。
 function syncBuiltinOptionRef(){
@@ -769,8 +770,8 @@ function checkExamAvailable(clearBanner){
     btn.disabled = true;
     banner.appendChild(el('div',{class:'banner bad'},[reason]));
   }
-  // 學生資料檔（可能因此換了科目／年級）每次確認後，順便同步系統內建的選填率參考檔、
-  // 並重新比對已上傳（或內建）的選填率參考檔是否仍相符
+  // 學生資料檔（可能因此換了科目／年級）每次確認後，順便同步系統內建的全縣參考資料檔、
+  // 並重新比對已上傳（或內建）的全縣參考資料檔是否仍相符
   syncBuiltinOptionRef();
   renderOptionRefBanner();
 }
@@ -900,7 +901,7 @@ function foundationalScore(code, subject){
   return stageRank*100000 + catRank*1000 + serial;
 }
 
-// ---------- 統計圖（依能力指標） ----------
+// ---------- 統計圖（依學習主題） ----------
 // ---------- 鄉鎮／全體平均比較 ----------
 function regionLabel(region){
   if(!region) return '';
@@ -915,7 +916,7 @@ function getCompareValue(region, subject, grade){
   const v = g[subject];
   return (v==null) ? null : v;
 }
-// 依「能力指標代碼」取得該地區在該代碼上的平均答對率（逐項比較，而非整科單一數值）
+// 依「學習主題代碼」取得該地區在該代碼上的平均答對率（逐項比較，而非整科單一數值）
 function getCompareCodeValue(region, subject, grade, code){
   if(!region || !DATA.regionCodeAverages) return null;
   const r = DATA.regionCodeAverages[region];
@@ -939,7 +940,7 @@ function hasAnyCompareCode(region, subject, grade){
 }
 
 // rows: [{code, title, correct, total, compareValue}]；compareLabel: 比較地區名稱字串，或 null（不比較）
-// compareValue 為該地區在「該列所屬能力指標代碼」上的平均答對率，逐列各自計算，非整張圖共用一個數值。
+// compareValue 為該地區在「該列所屬學習主題代碼」上的平均答對率，逐列各自計算，非整張圖共用一個數值。
 function buildBarChart(rows, compareLabel){
   const box = el('div',{class:'chart-box'});
   const hasCompare = !!compareLabel && rows.some(r=>r.compareValue!=null);
@@ -949,7 +950,7 @@ function buildBarChart(rows, compareLabel){
     el('span',null,[el('span',{class:'dot',style:'background:'+accColor(30)+';'},[]),'60% 以下（優先加強）']),
   ];
   if(hasCompare){
-    legendItems.push(el('span',null,[el('span',{class:'dot compare-dot'},[]), compareLabel+'　各能力指標平均（淡色直線，逐項對照）']));
+    legendItems.push(el('span',null,[el('span',{class:'dot compare-dot'},[]), compareLabel+'　各'+UNIT+'平均（淡色直線，逐項對照）']));
   }
   box.appendChild(el('div',{class:'chart-legend'}, legendItems));
 
@@ -969,9 +970,9 @@ function buildBarChart(rows, compareLabel){
   return box;
 }
 
-// ---------- 優先改善（第一項：與全縣正確率的落差，非依基礎程度） ----------
+// ---------- 優先改善（第一項：與全縣答對率的落差，非依基礎程度） ----------
 // 一律以「縣市」（全縣整體）為基準，與統計圖上方選擇的比較地區無關：
-// 全縣普遍答對率高、但本班（或個別學生）在同一能力指標的答對率偏低，視為落差最大、最優先改善。
+// 全縣普遍答對率高、但本班（或個別學生）在同一學習主題的答對率偏低，視為落差最大、最優先改善。
 function classCountyGapRows(contentAgg, subject, grade){
   return Object.entries(contentAgg)
     .filter(([code,agg])=> agg.total>0)
@@ -989,12 +990,12 @@ function buildClassCountyGapBox(contentAgg, subject, grade, subj){
   const rows = classCountyGapRows(contentAgg, subject, grade);
   const hasData = hasAnyCompareCode('縣市', subject, grade);
   const box = el('div',{class:'priority-box gap-box'});
-  box.appendChild(el('h4',null,['建議優先改善①：與全縣正確率落差最大']));
-  box.appendChild(el('div',{class:'priority-note'},['以「全縣正確率－本班正確率」排序：全縣普遍答對率較高、但本班答對率明顯偏低的能力指標排在最前面，代表本班在該指標上落後全縣平均較多，建議優先確認並補強。']));
+  box.appendChild(el('h4',null,['建議優先改善①：與全縣答對率落差最大']));
+  box.appendChild(el('div',{class:'priority-note'},['以「全縣答對率－本班答對率」排序：全縣普遍答對率較高、但本班答對率明顯偏低的'+UNIT+'排在最前面，代表本班在該'+UNIT+'上落後全縣平均較多，建議優先確認並補強。']));
   if(!hasData){
-    box.appendChild(el('div',{class:'empty-priority'},['目前沒有「全縣」在本科目、本年級的逐項能力指標資料可供比較。']));
+    box.appendChild(el('div',{class:'empty-priority'},['目前沒有「全縣」在本科目、本年級的逐項'+UNIT+'資料可供比較。']));
   } else if(rows.length===0){
-    box.appendChild(el('div',{class:'empty-priority'},['本班在已測得的能力指標中，答對率皆不低於全縣平均，暫無此類優先改善建議。']));
+    box.appendChild(el('div',{class:'empty-priority'},['本班在已測得的'+UNIT+'中，答對率皆不低於全縣平均，暫無此類優先改善建議。']));
   } else {
     rows.slice(0,5).forEach(r=>{
       const info = subj.content[r.code];
@@ -1027,12 +1028,12 @@ function buildStudentCountyGapBox(student, subject, grade, subj){
   const rows = studentCountyGapRows(student, subject, grade);
   const hasData = hasAnyCompareCode('縣市', subject, grade);
   const box = el('div',{class:'priority-box gap-box'});
-  box.appendChild(el('h4',null,['這位學生建議優先改善①：與全縣正確率落差最大']));
-  box.appendChild(el('div',{class:'priority-note'},['以「全縣正確率－這位學生正確率」排序：全縣普遍答對率較高、但這位學生在同一能力指標答對率偏低（含答錯）的項目排在最前面。']));
+  box.appendChild(el('h4',null,['這位學生建議優先改善①：與全縣答對率落差最大']));
+  box.appendChild(el('div',{class:'priority-note'},['以「全縣答對率－這位學生答對率」排序：全縣普遍答對率較高、但這位學生在同一'+UNIT+'答對率偏低（含答錯）的項目排在最前面。']));
   if(!hasData){
-    box.appendChild(el('div',{class:'empty-priority'},['目前沒有「全縣」在本科目、本年級的逐項能力指標資料可供比較。']));
+    box.appendChild(el('div',{class:'empty-priority'},['目前沒有「全縣」在本科目、本年級的逐項'+UNIT+'資料可供比較。']));
   } else if(rows.length===0){
-    box.appendChild(el('div',{class:'empty-priority'},['這位學生答錯的能力指標中，答對率皆不低於全縣平均，暫無此類優先改善建議。']));
+    box.appendChild(el('div',{class:'empty-priority'},['這位學生答錯的'+UNIT+'中，答對率皆不低於全縣平均，暫無此類優先改善建議。']));
   } else {
     rows.slice(0,6).forEach(r=>{
       const info = subj.content[r.code];
@@ -1060,9 +1061,9 @@ function buildClassPriorityBox(contentAgg, subject, subj){
   const rows = classPriorityRows(contentAgg, subject);
   const box = el('div',{class:'priority-box'});
   box.appendChild(el('h4',null,['建議優先加強②：依基礎程度排序（非依答錯人數排序）']));
-  box.appendChild(el('div',{class:'priority-note'},['依課綱學習階段與能力類別估算「較基礎」的已答錯代碼並排序在前，即使它們的答錯人數不是全班最多，也建議優先確認學生是否已掌握。']));
+  box.appendChild(el('div',{class:'priority-note'},['依課綱學習階段與類別估算「較基礎」的已答錯代碼並排序在前，即使它們的答錯人數不是全班最多，也建議優先確認學生是否已掌握。']));
   if(rows.length===0){
-    box.appendChild(el('div',{class:'empty-priority'},['全班在已測得的能力指標中皆全數答對，暫無優先加強建議。']));
+    box.appendChild(el('div',{class:'empty-priority'},['全班在已測得的'+UNIT+'中皆全數答對，暫無優先加強建議。']));
   } else {
     rows.slice(0,5).forEach(r=>{
       const info = subj.content[r.code];
@@ -1093,7 +1094,7 @@ function buildStudentPriorityBox(student, subject, subj){
   if(rows.length===0) return null;
   const box = el('div',{class:'priority-box'});
   box.appendChild(el('h4',null,['這位學生建議優先加強②：依基礎程度排序']));
-  box.appendChild(el('div',{class:'priority-note'},['已比對該生在同一能力指標的其他題目是否答對：「多次不會」表示同代碼題目全部答錯，較可能是能力尚未掌握；「疑似個別失誤」表示同代碼的其他題目有答對，這一題答錯較可能是看錯題目、選錯選項等個別狀況，而非該能力真正不足。']));
+  box.appendChild(el('div',{class:'priority-note'},['已比對該生在同一'+UNIT+'的其他題目是否答對：「多次不會」表示同代碼題目全部答錯，較可能是能力尚未掌握；「疑似個別失誤」表示同代碼的其他題目有答對，這一題答錯較可能是看錯題目、選錯選項等個別狀況，而非該能力真正不足。']));
   rows.slice(0,6).forEach(r=>{
     const info = subj.content[r.code];
     const pct = Math.round(r.agg.correct/r.agg.total*100);
@@ -1126,7 +1127,7 @@ function studentChartRows(student, subj, compareRegion, subject, grade){
   }).sort((a,b)=> (a.correct/a.total) - (b.correct/b.total));
 }
 
-// ---------- 錯誤選項選填率比較（本班 vs 全縣，需選填上傳「選填率參考檔」才會顯示） ----------
+// ---------- 錯誤選項選填率比較（本班 vs 全縣，需選填上傳「全縣參考資料檔」才會顯示） ----------
 // 找出本班在同一題「錯誤選項」的選填率，高於全縣同一選項選填率的題目，依落差由大到小排序。
 function optionGapRows(result, bank){
   if(!optionRefRows || optionRefRows.length===0) return [];
@@ -1150,7 +1151,7 @@ function optionGapRows(result, bank){
           classCount, total: denom,
           misc: it.misconceptions ? it.misconceptions[String(opt)] : null
         };
-        // 若選填率參考檔為「豐富格式」（見 parseRichOptionRef），額外帶入鑑別度／難易度，
+        // 若全縣參考資料檔為「豐富格式」（見 parseRichOptionRef），額外帶入鑑別度／難易度，
         // 以及此錯誤選項在全縣高分組／低分組的選填率，供 buildOptionGapBox 判斷是
         // 「低分組常見迷思」還是「高分組也常選（可能是題目本身誘答力強）」。
         if(ref.discrimination!=null) row.discrimination = ref.discrimination;
@@ -1168,7 +1169,7 @@ function optionGapRows(result, bank){
   return rows;
 }
 
-// 題目鑑別度提醒：獨立於「本班表現」之外，單純依選填率參考檔本身的鑑別度（豐富格式才有）
+// 題目鑑別度提醒：獨立於「本班表現」之外，單純依全縣參考資料檔本身的鑑別度（豐富格式才有）
 // 標出可能有品質疑慮的題目（鑑別度偏低甚至負值，代表高分組與低分組在這題的答對率差距很小、
 // 甚至低分組反而答得比高分組好），提醒老師解讀本班在這些題目的錯誤率時，也要考慮題目本身
 // 是否過難／過易／敘述不夠清楚，不一定完全是學生學習落差。鑑別度門檻採測驗編製常見經驗法則：
@@ -1189,7 +1190,7 @@ function buildDiscriminationBox(bank){
     const discColor = r.discrimination < 0 ? '#b91c1c' : '#b45309';
     item.innerHTML = '<div class="p-head"><span class="pill code">第'+r.item+'題</span>'+
       '<span style="color:'+discColor+';font-weight:700;">鑑別度 '+r.discrimination.toFixed(2)+'</span>'+
-      (r.difficulty!=null ? '<span class="muted">難易度 '+r.difficulty.toFixed(2)+'</span>' : '')+'</div>'+
+      (r.difficulty!=null ? '<span class="muted">難易度 '+r.difficulty.toFixed(2)+'（愈高愈容易）</span>' : '')+'</div>'+
       (it ? '<div class="p-note">'+escapeHtml(it.stem)+'</div>' : '');
     box.appendChild(item);
   });
@@ -1201,9 +1202,9 @@ function buildOptionGapBox(result, bank){
   const rows = optionGapRows(result, bank);
   const box = el('div',{class:'priority-box gap-box'});
   box.appendChild(el('h4',null,['常見錯誤選項比較：本班選填率高於全縣']));
-  box.appendChild(el('div',{class:'priority-note'},['依選填率參考檔比對每一題「非標準答案」選項：本班選填該選項的比例，若高於全縣選填同一選項的比例，代表這是本班特別容易被吸引的錯誤選項（可能反映班上共同的迷思概念），依落差由大到小排序。'+(optionRefIsBuiltin?'（全縣與本班的百分比，分母都是「到考的學生」，含該題留白者，與縣府報表的算法一致，所以各選項加起來可能不到 100%。）':'')]));
+  box.appendChild(el('div',{class:'priority-note'},['依全縣參考資料檔比對每一題「非標準答案」選項：本班選填該選項的比例，若高於全縣選填同一選項的比例，代表這是本班特別容易被吸引的錯誤選項（可能反映班上共同的迷思概念），依落差由大到小排序。'+(optionRefIsBuiltin?'（全縣與本班的百分比，分母都是「到考的學生」，含該題留白者，與縣府報表的算法一致，所以各選項加起來可能不到 100%。）':'')]));
   if(bank.totalItems && optionRefRows.length !== bank.totalItems){
-    box.appendChild(el('div',{class:'banner warn', style:'margin:0 0 10px;'},['提醒：選填率參考檔題數（'+optionRefRows.length+' 題）與目前「'+bank.examName+'」題本題數（'+bank.totalItems+' 題）不一致，很可能不是同一份題本／科目，以下比對結果可能是錯的，請確認後重新上傳正確的參考檔。']));
+    box.appendChild(el('div',{class:'banner warn', style:'margin:0 0 10px;'},['提醒：全縣參考資料檔題數（'+optionRefRows.length+' 題）與目前「'+bank.examName+'」題本題數（'+bank.totalItems+' 題）不一致，很可能不是同一份題本／科目，以下比對結果可能是錯的，請確認後重新上傳正確的參考檔。']));
   } else {
     box.appendChild(el('div',{class:'note', style:'margin:0 0 10px;'},[OPTION_REF_REMINDER]));
   }
@@ -1242,7 +1243,7 @@ function buildOptionGapBox(result, bank){
 
 // ---------- KIDMAP（把「能力 θ」與「題目難度 b」放在同一把 Logit 尺上）----------
 // 作法（Rasch 單參數模型的簡化版，非正式 IRT 軟體的校準結果）：
-//  1. 題目難度 b：取自「全縣市難易鑑別度」（選填率參考檔）中，每一題「正確選項」的全縣答對率 p，
+//  1. 題目難度 b：取自「全縣參考資料」中，每一題「正確選項」的全縣答對率 p，
 //     轉成 Logit（b = ln((1-p)/p)，p 限制在 2%~98% 避免無限大），再減去全部題目的平均，讓尺度以 0 為中心。
 //  2. 學生能力 θ：內建全縣資料時，與縣府「IRT 分析結果（受試者能力）」相同，採 EAP（期望後驗）估計：
 //     以 Rasch 模型加上常態先驗 N(μ, σ²)（μ、σ 存在各題本的 prior 欄位）計算 θ 的後驗平均，答對題數相同者 θ 相同；
@@ -1369,7 +1370,7 @@ function kidmapTitle(kd){ return (kd && kd.source==='irt') ? 'KIDMAP' : '近似 
 const KIDMAP_NOTE_3 = '怎麼和上方的「錯誤選項比較」對照：這裡的「能力足夠卻答錯」是依學生整體能力判斷「這題照理會、卻錯了」，原因不一定是迷思，也可能是粗心或誘答選項太像；上方標示「主要是低分組選的」則是看全縣高低分組誰在選這個錯誤選項。兩者角度不同，可以互相參照。班級人數較少時，各題的人數也很少，請搭配個別學生的 KIDMAP 一起解讀。';
 
 function kidmapFailText(kd, bank){
-  if(kd.reason === 'noref') return '目前沒有「全縣市難易鑑別度」（選填率參考檔）資料，而KIDMAP 需要全縣各題答對率（或 Rasch 難度）來估計題目難度。請改選有內建資料的年級／科目，或於上方上傳對應的參考檔後重新分析。';
+  if(kd.reason === 'noref') return '目前沒有「全縣參考資料」資料，而KIDMAP 需要全縣各題答對率（或 Rasch 難度）來估計題目難度。請改選有內建資料的年級／科目，或於上方上傳對應的參考檔後重新分析。';
   if(kd.reason === 'mismatch') return '參考檔中有 '+kd.excluded.length+' 題的標準答案與目前題本「'+bank.examName+'」對不上（共 '+bank.totalItems+' 題），很可能不是同一份題本／科目，為避免產生錯誤的分析，已停止產生 KIDMAP。';
   return '可用來估計難度的題目只有 '+kd.used+' 題，太少，無法產生可靠的 KIDMAP。';
 }
@@ -1381,7 +1382,7 @@ function kidmapExcludedText(kd){
 function buildKidmapVisual(map){
   const rows = map.rows.slice().sort((a,b)=> (b.b - a.b) || (a.item - b.item));
   const wrap = el('div',{class:'kidmap'});
-  wrap.appendChild(el('div',{class:'km-row km-head'},[el('div',null,['✔ 答對']), el('div',null,['難度 b']), el('div',null,['✘ 答錯'])]));
+  wrap.appendChild(el('div',{class:'km-row km-head'},[el('div',null,['✔ 答對']), el('div',null,['難度 b（愈大愈難）']), el('div',null,['✘ 答錯'])]));
   const th = map.est.theta;
   let lineDone = false;
   const lineRow = ()=> el('div',{class:'km-line'},['能力 θ = '+fmtLogit(th)+'　（虛線以上：較難，預期答錯；虛線以下：較易，預期答對）']);
@@ -1507,7 +1508,7 @@ function renderKidmapClassPanel(panel, result, bank, kd){
 
   // 各題四類人數表
   const table = el('table');
-  table.appendChild(el('tr',null,['題號','題目','全縣答對率','難度 b','合理答對','能力足夠卻答錯','合理答錯','超出預期答對'].map(t=>el('th',null,[t]))));
+  table.appendChild(el('tr',null,['題號','題目','全縣答對率','難度 b（愈大愈難）','合理答對','能力足夠卻答錯','合理答錯','超出預期答對'].map(t=>el('th',null,[t]))));
   bank.items.forEach(it=>{
     const a = agg[it.item]; if(!a) return;
     const d = kd.diffs[it.item];
@@ -1589,6 +1590,7 @@ function renderReport(result, bank, subject, grade, compareRegion){
   document.getElementById('reportShared').classList.remove('hidden');
   document.getElementById('reportSubtabs').classList.remove('hidden');
   const subj = DATA.subjects[subject] || DATA.subjects['數學'];
+  UNIT = (subject === '數學') ? '學習主題' : '學習表現'; // 報表中各列的名稱：數學依「學習內容」彙總成學習主題；國語文／英語文依「學習表現」彙總
   const codeLabel = (subject === '數學') ? '學習內容代碼' : '學習表現代碼';
 
   // 與鄉鎮／全體平均比較（選項改變時，用快取的分析結果重繪，不必重新讀檔分析）——
@@ -1614,13 +1616,14 @@ function renderReport(result, bank, subject, grade, compareRegion){
   const hasCompareData = compareRegion ? hasAnyCompareCode(compareRegion, subject, grade) : false;
   const compareLabel = (compareRegion && hasCompareData) ? regionLabel(compareRegion) : null;
   if(compareRegion && !hasCompareData){
-    shared.appendChild(el('div',{class:'banner warn'},['「'+regionLabel(compareRegion)+'」在「'+subject+'．'+grade+'年級」目前沒有逐項能力指標的平均數資料可比較，圖表暫不顯示比較線。']));
+    shared.appendChild(el('div',{class:'banner warn'},['「'+regionLabel(compareRegion)+'」在「'+subject+'．'+grade+'年級」目前沒有逐項'+UNIT+'的平均數資料可比較，圖表暫不顯示比較線。']));
   } else if(compareLabel){
-    shared.appendChild(el('div',{class:'note', style:'margin:-4px 0 12px;'},['圖中淡色直線為「'+compareLabel+'」在本科目、本年級中，「同一能力指標」所對應題目的平均答對率，逐項各自對照（部分指標若該地區缺乏對應資料，則該列不顯示比較線）。']));
+    shared.appendChild(el('div',{class:'note', style:'margin:-4px 0 12px;'},['圖中淡色直線為「'+compareLabel+'」在本科目、本年級中，「同一'+UNIT+'」所對應題目的平均答對率，逐項各自對照（部分'+UNIT+'若該地區缺乏對應資料，則該列不顯示比較線）。']));
   }
 
-  // ①班級總覽：各能力指標答對率及建議優先改善
-  panelOverview.appendChild(el('h3',null,['班級總覽：各能力指標答對率']));
+  // ①班級總覽：各學習主題答對率及建議優先改善
+  panelOverview.appendChild(el('h3',null,['班級總覽：各'+UNIT+'答對率']));
+  panelOverview.appendChild(el('div',{class:'note', style:'margin:-6px 0 10px;'},['每個'+UNIT+'通常只包含少數幾題（括號內是答對人次／作答人次），題數少時請搭配人數判讀，不要單看百分比。']));
   const contentEntries = Object.entries(result.contentAgg).sort((a,b)=> (a[1].correct/a[1].total) - (b[1].correct/b[1].total));
   const classChartRows = contentEntries.map(([code,agg])=>({
     code, title: (subj.content[code]||{}).title || code, correct: agg.correct, total: agg.total,
@@ -1630,7 +1633,7 @@ function renderReport(result, bank, subject, grade, compareRegion){
   panelOverview.appendChild(buildClassCountyGapBox(result.contentAgg, subject, grade, subj));
   panelOverview.appendChild(buildClassPriorityBox(result.contentAgg, subject, subj));
 
-  // ②常見錯誤選項比較（需選填上傳「選填率參考檔」才有內容）
+  // ②常見錯誤選項比較（需選填上傳「全縣參考資料檔」才有內容）
   const optionGapBox = buildOptionGapBox(result, bank);
   if(optionGapBox){
     panelOptionGap.appendChild(optionGapBox);
@@ -1643,7 +1646,7 @@ function renderReport(result, bank, subject, grade, compareRegion){
 
   // ③建議教學完整列表（依代碼分組，由低到高排序）
   const fullDet = el('details',{class:'fold'});
-  fullDet.appendChild(el('summary',null,['各能力指標的完整教學建議（點開查看，依答對率由低到高排序）']));
+  fullDet.appendChild(el('summary',null,['各'+UNIT+'的完整教學建議（點開查看，依答對率由低到高排序）']));
   const panelFullList = el('div',{style:'margin-top:10px;'});
   fullDet.appendChild(panelFullList);
   panelOverview.appendChild(fullDet);
@@ -1691,7 +1694,7 @@ function renderReport(result, bank, subject, grade, compareRegion){
       el('div',{class:'muted'},['錯 '+s.wrongItems.length+' 題　▼'])
     ]);
     const bodyDiv = el('div',{class:'student-body'});
-    bodyDiv.appendChild(el('h4',{style:'margin:10px 0 6px;font-size:13.5px;'},['該生答錯題目所涉能力指標（答對率為該生在同一指標的所有題目中的表現）']));
+    bodyDiv.appendChild(el('h4',{style:'margin:10px 0 6px;font-size:13.5px;'},['該生答錯題目所涉'+UNIT+'（答對率為該生在同一'+UNIT+'的所有題目中的表現）']));
     bodyDiv.appendChild(buildBarChart(studentChartRows(s, subj, compareRegion, subject, grade), compareLabel));
     bodyDiv.appendChild(buildStudentCountyGapBox(s, subject, grade, subj));
     const pbox = buildStudentPriorityBox(s, subject, subj);
